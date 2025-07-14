@@ -9,9 +9,7 @@ for attribute in dir(SendSms):
     attribute_value = getattr(SendSms, attribute)
     if callable(attribute_value):
         if attribute.startswith('__') == False:
-            servisler_sms.append(attribute)
-
-            
+            servisler_sms.append(attribute)            
 while 1:
     system("cls||clear")
     print("""{}
@@ -28,13 +26,7 @@ while 1:
                `-----' /
   <----.     __ / __   \
   <----|====O)))==) \) /====
-  <----'    `--' `.__,' \
-               |        |
-                \       /
-           ______( (_  / \______
-         ,'  ,-----'   |        \
-         `--{__________)        \/
-    
+  <----'    `--' `.__,' \    
     Sms: 49{}           {}coder {}@mustafa.enes23\n  
     """.format(Fore.LIGHTCYAN_EX, len(servisler_sms), Style.RESET_ALL, Fore.LIGHTRED_EX))
     try:
