@@ -36,7 +36,7 @@ def display_main_menu(num_services):
                -,-..\  _  \  `  /  ,  / `._) _,-\`       \
 `   
     Sms: {num_services}{Style.RESET_ALL}           {Fore.LIGHTRED_EX}coder °∞°|BYFURKAN|°∞°
-    """)
+    """) #
     print(Fore.LIGHTMAGENTA_EX + " 1- SMS Gönder (Normal)\n")
     print(" 2- SMS Gönder (Turbo😈)\n")
     print(" 3- Çıkış\n")
