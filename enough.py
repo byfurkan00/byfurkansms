@@ -15,16 +15,21 @@ for attribute in dir(SendSms):
 while 1:
     system("cls||clear")
     print("""{}
-     ______                         _     
-    |  ____|                       | |    
-    | |__   _ __   ___  _   _  __ _| |__  
-    |  __| | '_ \ / _ \| | | |/ _` | '_ \ 
-    | |____| | | | (_) | |_| | (_| | | | |
-    |______|_| |_|\___/ \__,_|\__, |_| |_|
-                               __/ |      
-                              |___/      
+    .    .
+          |\   |\
+       _..;|;__;|;
+     ,'   ';` \';`-.
+     7;-..     :   )
+.--._)|   `;==,|,=='
+ `\`@; \_ `<`G," G).
+   `\/-;,(  )  .>. )
+       < ,-;'-.__.;'
+        `\_ `-,__,'
+           `-..,;,>
+              `;;;;
+               `  `      
     
-    Sms: {}           {}by {}@tingirifistik\n  
+    Sms: {}           {}by {}°∞°|BYFURKAN|°∞°\n  
     """.format(Fore.LIGHTCYAN_EX, len(servisler_sms), Style.RESET_ALL, Fore.LIGHTRED_EX))
     try:
         menu = (input(Fore.LIGHTMAGENTA_EX + " 1- SMS Gönder (Normal)\n\n 2- SMS Gönder (Turbo)\n\n 3- Çıkış\n\n" + Fore.LIGHTYELLOW_EX + " Seçim: "))
@@ -70,7 +75,7 @@ while 1:
                 continue
         system("cls||clear")
         try:
-            print(Fore.LIGHTYELLOW_EX + "Mail adresi (Bilmiyorsanız 'enter' tuşuna basın): "+ Fore.LIGHTGREEN_EX, end="")
+            print(Fore.LIGHTYELLOW_EX + "('enter' tuşuna basın): "+ Fore.LIGHTGREEN_EX, end="")
             mail = input()
             if ("@" not in mail or ".com" not in mail) and mail != "":
                 raise
@@ -144,7 +149,7 @@ while 1:
             continue
         system("cls||clear")
         try:
-            print(Fore.LIGHTYELLOW_EX + "Mail adresi (Bilmiyorsanız 'enter' tuşuna basın): "+ Fore.LIGHTGREEN_EX, end="")
+            print(Fore.LIGHTYELLOW_EX + "('enter' tuşuna basın): "+ Fore.LIGHTGREEN_EX, end="")
             mail = input()
             if ("@" not in mail or ".com" not in mail) and mail != "":
                 raise
