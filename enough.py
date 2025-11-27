@@ -22,7 +22,7 @@ def clear_screen():
 def display_main_menu(num_services):
     """Ana menüyü ve ASCII art'ı gösterir."""
     clear_screen()
-    print(f"""{Fore.LIGHTCYAN_EX}
+    print(rf"""{Fore.LIGHTCYAN_EX}
     ,--,  ,.-.,
                ,                   \,       '-,-`,'-.' | ._
               /|           \    ,   |\         }  )/  / `-,',
