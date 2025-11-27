@@ -115,7 +115,7 @@ def normal_sms_sender():
             return
 
     clear_screen()
-    mail = get_user_input(Fore.LIGHTYELLOW_EX + "Mail adresi (Bilmiyorsanız 'enter' tuşuna basın): ", str)
+    mail = get_user_input(Fore.LIGHTYELLOW_EX + "('enter' tuşuna basın): ", str)
     if not validate_email(mail):
         clear_screen()
         print(Fore.LIGHTRED_EX + "Hatalı mail adresi. Tekrar deneyiniz.") 
@@ -172,7 +172,7 @@ def turbo_sms_sender():
         return
 
     clear_screen()
-    mail = get_user_input(Fore.LIGHTYELLOW_EX + "Mail adresi (Bilmiyorsanız 'enter' tuşuna basın): ", str)
+    mail = get_user_input(Fore.LIGHTYELLOW_EX + "('enter' tuşuna basın): ", str)
     if not validate_email(mail):
         clear_screen()
         print(Fore.LIGHTRED_EX + "Hatalı mail adresi. Tekrar deneyiniz.") 
