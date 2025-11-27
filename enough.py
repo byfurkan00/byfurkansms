@@ -24,19 +24,19 @@ def display_main_menu(num_services):
     clear_screen()
     print(f"""{Fore.LIGHTCYAN_EX}
     ,        ,
-              /(        )`
-              \ \___   / |
-              /- _  `-/  '
-             (/\/ \ \   /\    
-             / /   | `    \
-             O O   ) /    |
-             `-^--'`<     '
-            (_.)  _ )    /
-             `.___/`/    /
-               `-----' /
-  <----.     __ / __   \
-  <----|====O)))==) \) /====
-  <----'    `--' `.__,' \    
+                .    .
+          |\   |\
+       _..;|;__;|;
+     ,'   ';` \';`-.
+     7;-..     :   )
+.--._)|   `;==,|,=='
+ `\`@; \_ `<`G," G).
+   `\/-;,(  )  .>. )
+       < ,-;'-.__.;'
+        `\_ `-,__,'
+           `-..,;,>
+              `;;;;
+               `  `    ' \    
     Sms: {num_services}{Style.RESET_ALL}           {Fore.LIGHTRED_EX}coder °∞°|BYFURKAN|°∞°
     """)
     print(Fore.LIGHTMAGENTA_EX + " 1- SMS Gönder (Normal)\n")
