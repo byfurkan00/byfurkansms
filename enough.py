@@ -29,7 +29,7 @@ while 1:
               `;;;;
                `  `      
     
- Sms: {}           {} {}°∞°|BYFURKAN|°∞°\n  
+ Sms: {}           {}by {}°∞°|BYFURKAN|°∞°\n  
     """.format(Fore.LIGHTRED_EX, len(servisler_sms), Style.RESET_ALL, Fore.LIGHTRED_EX))
     try:
 
