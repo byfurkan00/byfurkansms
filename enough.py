@@ -32,6 +32,7 @@ while 1:
  print(f"Sms: {len(servisler_sms)}        owner {Fore.LIGHTRED_EX}°∞°|BYFURKAN|°∞°{Style.RESET_ALL}")
 print("")
 try:
+
 (Fore.LIGHTCYAN_EX, len(servisler_sms), Style.RESET_ALL, Fore.LIGHTRED_EX))
     try:
         menu = (input(Fore.LIGHTMAGENTA_EX + " 1- SMS Gönder (Normal😼)\n\n 2- SMS Gönder (Turbo😈)\n\n 3- Çıkış\n\n" + Fore.LIGHTYELLOW_EX + " Seçim: "))
