@@ -29,9 +29,9 @@ while 1:
               `;;;;
                `  `      
     
- print(f"Sms: {len(servisler_sms)}        owner {Fore.LIGHTRED_EX}°∞°|BYFURKAN|°∞°{Style.RESET_ALL}")
-print("")
-try:
+ Sms: {}           {} {}°∞°|BYFURKAN|°∞°\n  
+    """.format(Fore.LIGHTRED_EX, len(servisler_sms), Style.RESET_ALL, Fore.LIGHTRED_EX))
+    try:
 
 (Fore.LIGHTCYAN_EX, len(servisler_sms), Style.RESET_ALL, Fore.LIGHTRED_EX))
     try:
