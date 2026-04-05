@@ -4,7 +4,9 @@ from os import system
 from sms import SendSms
 import threading
 import shutil
+import sys
 
+# Servisleri toplama bölümü (Bozulmadı)
 servisler_sms = []
 for attribute in dir(SendSms):
     attribute_value = getattr(SendSms, attribute)
@@ -12,20 +14,48 @@ for attribute in dir(SendSms):
         if not attribute.startswith('__'):
             servisler_sms.append(attribute)
 
-def durdurma_uyarisi():
-    print(Fore.LIGHTRED_EX + "--------------------------------------------------------------")
-    print(" PROGRAMI DURDURMAK VEYA MENÜYE DONMEK ICIN: CTRL + C BASINIZ.")
-    print("--------------------------------------------------------------" + Style.RESET_ALL)
-
-def sabit_footer():
+# --- Sabit Footer Sistemi (Burayı Güncelledik) ---
+def sabit_footer_ac():
     cols, lines = shutil.get_terminal_size()
-    # İmleci en alt satıra taşır, uyarıyı yazar ve imleci eski yerine (yukarı) almaz
-    # Bu sayede yazılar aksa da bu satır en dipte kalır
-    print(f"\033[{lines};0H\033[1;31m PROGRAMI DURDURMAK VEYA   MENUYE DONMEK ICIN: CTRL + C BASINIZ.\033[0m", end="", flush=True)
+    # Kaydırma alanını sınırla (En alt satırı hariç tut)
+    sys.stdout.write(f"\033[0;{lines-1}r")
+    sys.stdout.flush()
+
+def sabit_footer_yaz():
+    cols, lines = shutil.get_terminal_size()
+    # İmleci dondurulmuş en alt satıra taşı
+    sys.stdout.write(f"\033[{lines};0H")
+    # Yazıyı ortala ve sığacak şekilde küçük bas (Kırmızı ve Kalın)
+    # Metin sığsın diye biraz daha sadeleştirdim.
+    uyari_metni = " DURDUR: CTRL+C | MENU: TEKRAR CTRL+C "
+    if cols < len(uyari_metni):
+         # Çok dar ekranlar için ultra kısa metin
+         uyari_metni = " CTRL+C: DURDUR "
+    
+    padded_text = uyari_metni.center(cols)
+    sys.stdout.write(f"\033[1;31m{padded_text}\033[0m")
+    # İmleci tekrar akış alanına (yukarı) gönder
+    sys.stdout.write("\033[H")
+    sys.stdout.flush()
+
+def sabit_footer_kapat():
+    # Kaydırma alanını sıfırla (Terminali normale döndür)
+    sys.stdout.write("\033[r")
+    system("cls||clear")
+    sys.stdout.flush()
+# --------------------------------------------------
+
+# --- Durdurma Uyarısı (Numara Giriş Ekranları İçin) ---
+def durdurma_uyarisi_basit():
+    print(Fore.LIGHTRED_EX + "--------------------------------------------------------------")
+    print(" PROGRAMI DURDURMAK VEYA MENUYE DONMEK ICIN: CTRL + C BASINIZ.")
+    print("--------------------------------------------------------------" + Style.RESET_ALL)
+# -----------------------------------------------------
 
 while True:
     system("cls||clear")
 
+    # ASCII Çizimi (Bozulmadı)
     print(r"""
     .    .
 
@@ -62,14 +92,14 @@ while True:
 
     if menu == 1:
         system("cls||clear")
-        durdurma_uyarisi()
+        durdurma_uyarisi_basit()
         print(Fore.LIGHTYELLOW_EX + "Telefon numarasını başında '+90' olmadan yazınız: " + Fore.LIGHTGREEN_EX, end="")
         tel_no = input().strip()
         tel_liste = []
 
         if tel_no == "":
             system("cls||clear")
-            durdurma_uyarisi()
+            durdurma_uyarisi_basit()
             print(Fore.LIGHTYELLOW_EX + "Dosya dizinini yazınız: " + Fore.LIGHTGREEN_EX, end="")
             dizin = input().strip()
             try:
@@ -84,42 +114,44 @@ while True:
             tel_liste.append(tel_no)
 
         system("cls||clear")
-        durdurma_uyarisi()
+        durdurma_uyarisi_basit()
         print(Fore.LIGHTYELLOW_EX + "Mail adresi (opsiyonel): " + Fore.LIGHTGREEN_EX, end="")
         mail = input().strip()
 
         system("cls||clear")
-        durdurma_uyarisi()
+        durdurma_uyarisi_basit()
         print(Fore.LIGHTYELLOW_EX + "Kaç adet SMS: " + Fore.LIGHTGREEN_EX, end="")
         kere = input().strip()
         kere = int(kere) if kere else None
 
         system("cls||clear")
-        durdurma_uyarisi()
+        durdurma_uyarisi_basit()
         print(Fore.LIGHTYELLOW_EX + "Saniye aralığı: " + Fore.LIGHTGREEN_EX, end="")
         aralik = int(input().strip())
 
         system("cls||clear")
-        # Alt satırı sabitlemek için terminale kaydırma alanı sınırı koyuyoruz
-        cols, lines = shutil.get_terminal_size()
-        print(f"\033[0;{lines-1}r", end="") 
+        # --- Akış Başlıyor: Sabit Footer'ı Devreye Sok ---
+        sabit_footer_ac()
 
         try:
             while True:
                 for i in tel_liste:
                     sms = SendSms(i, mail)
                     for fonk in servisler_sms:
-                        sabit_footer()
-                        # İmleci tekrar yazı alanına (en başa) gönder
-                        print("\033[H", end="")
+                        # Her SMS'ten önce footer'ı tazele (En altta çakılı kalsın)
+                        sabit_footer_yaz()
                         try:
                             getattr(sms, fonk)()
                         except: pass
                         sleep(aralik)
                 if kere is not None: break
         except KeyboardInterrupt:
-            print("\033[r") # Kaydırma alanını sıfırla
+            # CTRL+C basınca terminali normale döndür
+            sabit_footer_kapat()
             continue
+        
+        # Gönderim doğal biterse de terminali normale döndür
+        sabit_footer_kapat()
 
     elif menu == 3:
         system("cls||clear")
@@ -127,26 +159,26 @@ while True:
 
     elif menu == 2:
         system("cls||clear")
-        durdurma_uyarisi()
+        durdurma_uyarisi_basit()
         print(Fore.LIGHTYELLOW_EX + "Telefon no: " + Fore.LIGHTGREEN_EX, end="")
         tel_no = input().strip()
         
         system("cls||clear")
-        durdurma_uyarisi()
+        durdurma_uyarisi_basit()
         print(Fore.LIGHTYELLOW_EX + "Mail adresi: " + Fore.LIGHTGREEN_EX, end="")
         mail = input().strip()
 
         system("cls||clear")
-        cols, lines = shutil.get_terminal_size()
-        print(f"\033[0;{lines-1}r", end="") 
+        # --- Akış Başlıyor (Turbo): Sabit Footer'ı Devreye Sok ---
+        sabit_footer_ac()
         
         send_sms = SendSms(tel_no, mail)
         dur = threading.Event()
 
         def Turbo():
             while not dur.is_set():
-                sabit_footer()
-                print("\033[H", end="")
+                # Turbo modda da en altı tazele
+                sabit_footer_yaz()
                 thread_list = []
                 for fonk in servisler_sms:
                     t = threading.Thread(target=getattr(send_sms, fonk), daemon=True)
@@ -159,9 +191,13 @@ while True:
             Turbo()
         except KeyboardInterrupt:
             dur.set()
-            print("\033[r")
+            # CTRL+C basınca terminali normale döndür
+            sabit_footer_kapat()
             continue
+        
+        # Turbo doğal biterse (olmaz ama) terminali normale döndür
+        sabit_footer_kapat()
 
     else:
         continue
-        
+            
