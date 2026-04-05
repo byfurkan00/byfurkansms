@@ -7,8 +7,14 @@ import shutil
 import sys
 import os
 
-# Durdurma bayrağı
-dur_bakalim = False
+# Ekranı susturma mekanizması
+class SessizMod:
+    def __enter__(self):
+        self._original_stdout = sys.stdout
+        sys.stdout = open(os.devnull, 'w')
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        sys.stdout.close()
+        sys.stdout = self._original_stdout
 
 servisler_sms = []
 for attribute in dir(SendSms):
@@ -27,15 +33,7 @@ def ekran_temizle():
     sys.stdout.write("\033[r\033[H\033[J")
     sys.stdout.flush()
 
-def sms_gonder(fonk, tel, mail):
-    if not dur_bakalim:
-        try:
-            sms = SendSms(tel, mail)
-            getattr(sms, fonk)()
-        except: pass
-
 while True:
-    dur_bakalim = False
     ekran_temizle()
     print(r"""
     .    .
@@ -80,36 +78,34 @@ while True:
         try:
             if menu == 1:
                 adet = 0
-                while not dur_bakalim:
+                while True:
+                    sms = SendSms(tel_no, mail)
                     for fonk in servisler_sms:
-                        if dur_bakalim: break
                         alt_yazi_sabit()
-                        sms_gonder(fonk, tel_no, mail)
+                        getattr(sms, fonk)()
                         if kere > 0:
                             adet += 1
-                            if adet >= kere: 
-                                dur_bakalim = True
-                                break
+                            if adet >= kere: break
                         sleep(aralik)
                     if kere > 0 and adet >= kere: break
-            else: # Turbo Mod
-                while not dur_bakalim:
+            else: # Turbo
+                send_sms = SendSms(tel_no, mail)
+                while True:
                     alt_yazi_sabit()
-                    isler = []
+                    threads = []
                     for fonk in servisler_sms:
-                        if dur_bakalim: break
-                        t = threading.Thread(target=sms_gonder, args=(fonk, tel_no, mail), daemon=True)
-                        isler.append(t)
+                        t = threading.Thread(target=getattr(send_sms, fonk), daemon=True)
+                        threads.append(t)
                         t.start()
-                    for t in isler:
-                        t.join(0.1) # Daha hızlı kontrol için kısa süreli join
+                    for t in threads: t.join()
         except KeyboardInterrupt:
-            dur_bakalim = True
-            ekran_temizle()
+            # CTRL+C basıldığı an SESSİZ MODA GEÇ ve her şeyi temizle
+            with SessizMod():
+                ekran_temizle()
+                sleep(0.5) # Arkadaki kalıntıların sönmesi için minik bir ara
             continue
 
     elif menu == 3:
         ekran_temizle()
-        print(Fore.LIGHTRED_EX + "Kapatılıyor...")
         os._exit(0)
-               
+                
