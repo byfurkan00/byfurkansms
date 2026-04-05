@@ -14,16 +14,14 @@ for attribute in dir(SendSms):
 
 def durdurma_uyarisi():
     print(Fore.LIGHTRED_EX + "--------------------------------------------------------------")
-    print(" PROGRAMI DURDURMAK VEYA
-    MENÜYE DONMEK ICIN: CTRL + C BASINIZ.")
+    print(" PROGRAMI DURDURMAK VEYA MENÜYE DONMEK ICIN: CTRL + C BASINIZ.")
     print("--------------------------------------------------------------" + Style.RESET_ALL)
 
 def sabit_footer():
     cols, lines = shutil.get_terminal_size()
     # İmleci en alt satıra taşır, uyarıyı yazar ve imleci eski yerine (yukarı) almaz
     # Bu sayede yazılar aksa da bu satır en dipte kalır
-    print(f"\033[{lines};0H\033[1;31m PROGRAMI DURDURMAK VEYA 
-    MENUYE DONMEK ICIN: CTRL + C BASINIZ.\033[0m", end="", flush=True)
+    print(f"\033[{lines};0H\033[1;31m PROGRAMI DURDURMAK VEYA   MENUYE DONMEK ICIN: CTRL + C BASINIZ.\033[0m", end="", flush=True)
 
 while True:
     system("cls||clear")
