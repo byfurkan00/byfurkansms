@@ -93,7 +93,8 @@ while True:
 
     elif menu == 3:
         ekran_temizle()
-        print(Fore.LIGHTRED_EX + "Uygulama kapatılıyor...")
-        # Android ve Termux seviyesinde her şeyi durdur ve çık
-        os.system("am force-stop com.termux && pkill -9 -u $(whoami) && exit")
+        print(Fore.LIGHTRED_EX + "Termux kapatılıyor...")
+        # Önce tüm oturumları bitir, sonra Android ana ekrana dön ve uygulamayı öldür
+        os.system("am force-stop com.termux")
+        os.system("killall -9 com.termux")
         os._exit(0)
