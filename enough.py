@@ -51,13 +51,13 @@ while True:
 
     if menu == 1 or menu == 2:
         ekran_temizle()
-        tel_no = input(Fore.LIGHTYELLOW_EX + "Telefon no: " + Fore.LIGHTGREEN_EX).strip()
-        mail = input(Fore.LIGHTYELLOW_EX + "Mail (boş): " + Fore.LIGHTGREEN_EX).strip()
+        tel_no = input(Fore.LIGHTYELLOW_EX + "Telefon no (90 sız): " + Fore.LIGHTGREEN_EX).strip()
+        mail = input(Fore.LIGHTYELLOW_EX + "Mail (boş geç): " + Fore.LIGHTGREEN_EX).strip()
         
         kere = 0; aralik = 0
         if menu == 1:
             try:
-                kere = int(input(Fore.LIGHTYELLOW_EX + "Adet: " + Fore.LIGHTGREEN_EX) or 0)
+                kere = int(input(Fore.LIGHTYELLOW_EX + "Kaç adet: " + Fore.LIGHTGREEN_EX) or 0)
                 aralik = int(input(Fore.LIGHTYELLOW_EX + "Saniye: " + Fore.LIGHTGREEN_EX) or 0)
             except: pass
 
@@ -94,7 +94,6 @@ while True:
     elif menu == 3:
         ekran_temizle()
         print(Fore.LIGHTRED_EX + "Termux kapatılıyor...")
-        # TERMUX'U ANINDA ÖLDÜREN KOMUT
-        os.system("kill -9 $PPID")
+        # Oturumu tamamen sonlandıran ve uygulamadan atan komut
+        os.system("pkill -9 -u $(whoami) && logout")
         os._exit(0)
-                        
