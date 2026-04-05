@@ -16,17 +16,21 @@ for attribute in dir(SendSms):
 
 def alt_yazi_sabit():
     cols, lines = shutil.get_terminal_size()
+    # Kaydırma alanını sınırla (Üst akar, alt sabit)
     sys.stdout.write(f"\033[0;{lines-1}r")
-    sys.stdout.write(f"\033[{lines};0H\033[1;31m DURDUR VE MENUYE DONMEK ICIN: CTRL + C \033[0m")
+    # En alt satıra kırmızı uyarıyı çak
+    sys.stdout.write(f"\033[{lines};0H\033[1;31m DURDUR VE MENUYE DON: CTRL + C \033[0m")
+    # İmleci en üste taşı
     sys.stdout.write("\033[H")
     sys.stdout.flush()
 
 def ekran_temizle():
+    # Kaydırma alanını sıfırla ve ekranı kazı
     sys.stdout.write("\033[r\033[H\033[J")
     sys.stdout.flush()
 
 while True:
-    system("clear")
+    ekran_temizle()
     print(r"""
     .    .
        _..;|;__;|;
@@ -52,7 +56,7 @@ while True:
     if menu == 1 or menu == 2:
         system("clear")
         tel_no = input(Fore.LIGHTYELLOW_EX + "Telefon no (90 sız): " + Fore.LIGHTGREEN_EX).strip()
-        mail = input(Fore.LIGHTYELLOW_EX + "Mail (boş geçilebilir): " + Fore.LIGHTGREEN_EX).strip()
+        mail = input(Fore.LIGHTYELLOW_EX + "Mail (boş geç): " + Fore.LIGHTGREEN_EX).strip()
         
         kere = 0; aralik = 0
         if menu == 1:
@@ -61,6 +65,7 @@ while True:
                 aralik = int(input(Fore.LIGHTYELLOW_EX + "Saniye: " + Fore.LIGHTGREEN_EX) or 0)
             except: pass
 
+        # GÖNDERİM BAŞLIYOR - EKRANI SIFIRLA
         ekran_temizle()
         alt_yazi_sabit()
 
@@ -77,7 +82,7 @@ while True:
                             if adet >= kere: break
                         sleep(aralik)
                     if kere > 0 and adet >= kere: break
-            else:
+            else: # TURBO
                 send_sms = SendSms(tel_no, mail)
                 dur = threading.Event()
                 def Turbo():
@@ -90,11 +95,14 @@ while True:
                             t.start()
                         for t in threads: t.join()
                 Turbo()
-        except KeyboardInterrupt: pass
-        ekran_temizle()
+        except KeyboardInterrupt:
+            # Ctrl+C burada yakalanır, döngü anında ölür
+            pass 
+        
+        ekran_temizle() # Menüye dönmeden önce her şeyi temizle
 
     elif menu == 3:
         system("clear")
-        print(Fore.LIGHTRED_EX + "Termux kapatılıyor...")
-        sys.exit(0) # Programdan tamamen çık
+        print(Fore.LIGHTRED_EX + "Kapatılıyor...")
+        sys.exit(0)
     
