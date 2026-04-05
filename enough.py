@@ -7,6 +7,7 @@ import shutil
 import sys
 import os
 
+# Servisleri hazırla
 servisler_sms = []
 for attribute in dir(SendSms):
     attribute_value = getattr(SendSms, attribute)
@@ -43,20 +44,20 @@ while True:
     print(f"Sms: {Fore.LIGHTRED_EX}{len(servisler_sms)}{Style.RESET_ALL}      {Fore.LIGHTCYAN_EX}°∞°BYFURKAN°∞°{Style.RESET_ALL}\n")
 
     try:
-        secim = input(Fore.LIGHTMAGENTA_EX + " 1- SMS Gönder (Normal)\n\n 2- SMS Gönder (Turbo)\n\n 3- Termuxu Kapat\n\n" + Fore.LIGHTYELLOW_EX + " Seçim: ")
+        secim = input(Fore.LIGHTMAGENTA_EX + " 1- SMS Gönder\n\n 2- SMS Gönder (Turbo)\n\n 3- Termuxu Kapat\n\n" + Fore.LIGHTYELLOW_EX + " Seçim: ")
         if not secim: continue
         menu = int(secim)
     except: continue
 
     if menu == 1 or menu == 2:
         ekran_temizle()
-        tel_no = input(Fore.LIGHTYELLOW_EX + "Telefon no (90 sız): " + Fore.LIGHTGREEN_EX).strip()
-        mail = input(Fore.LIGHTYELLOW_EX + "Mail (boş geç): " + Fore.LIGHTGREEN_EX).strip()
+        tel_no = input(Fore.LIGHTYELLOW_EX + "Telefon no: " + Fore.LIGHTGREEN_EX).strip()
+        mail = input(Fore.LIGHTYELLOW_EX + "Mail (boş): " + Fore.LIGHTGREEN_EX).strip()
         
         kere = 0; aralik = 0
         if menu == 1:
             try:
-                kere = int(input(Fore.LIGHTYELLOW_EX + "Kaç adet: " + Fore.LIGHTGREEN_EX) or 0)
+                kere = int(input(Fore.LIGHTYELLOW_EX + "Adet: " + Fore.LIGHTGREEN_EX) or 0)
                 aralik = int(input(Fore.LIGHTYELLOW_EX + "Saniye: " + Fore.LIGHTGREEN_EX) or 0)
             except: pass
 
@@ -92,7 +93,8 @@ while True:
 
     elif menu == 3:
         ekran_temizle()
-        # Bu komut Termux oturumunu anında sonlandırır
+        print(Fore.LIGHTRED_EX + "Termux kapatılıyor...")
+        # TERMUX'U ANINDA ÖLDÜREN KOMUT
         os.system("kill -9 $PPID")
         os._exit(0)
-    
+                        
