@@ -97,4 +97,3 @@ while True:
         # Android ve Termux seviyesinde her şeyi durdur ve çık
         os.system("am force-stop com.termux && pkill -9 -u $(whoami) && exit")
         os._exit(0)
-    
