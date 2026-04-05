@@ -1,13 +1,12 @@
-from colorama import Fore, Style
-from time import sleep
-from os import system
-from sms import SendSms
-import threading
-import shutil
-import sys
 import os
+import sys
+import shutil
+import threading
+from time import sleep
+from colorama import Fore, Style
+from sms import SendSms
 
-# Servisleri hazırla
+# Servisleri otomatik çek
 servisler_sms = []
 for attribute in dir(SendSms):
     attribute_value = getattr(SendSms, attribute)
@@ -16,17 +15,20 @@ for attribute in dir(SendSms):
 
 def alt_yazi_sabit():
     cols, lines = shutil.get_terminal_size()
+    # Alt satırı sabitler ve uyarıyı yazar
     sys.stdout.write(f"\033[0;{lines-1}r")
     sys.stdout.write(f"\033[{lines};0H\033[1;31m DURDUR VE MENUYE DON: CTRL + C \033[0m")
     sys.stdout.write("\033[H")
     sys.stdout.flush()
 
 def ekran_temizle():
+    # Ekranı resetler ve temizler
     sys.stdout.write("\033[r\033[H\033[J")
     sys.stdout.flush()
 
 while True:
     ekran_temizle()
+    # ASCII Banner
     print(r"""
     .    .
        _..;|;__;|;
@@ -44,7 +46,7 @@ while True:
     print(f"Sms: {Fore.LIGHTRED_EX}{len(servisler_sms)}{Style.RESET_ALL}      {Fore.LIGHTCYAN_EX}°∞°BYFURKAN°∞°{Style.RESET_ALL}\n")
 
     try:
-        secim = input(Fore.LIGHTMAGENTA_EX + " 1- SMS Gönder\n\n 2- SMS Gönder (Turbo)\n\n 3- Termuxu Kapat\n\n" + Fore.LIGHTYELLOW_EX + " Seçim: ")
+        secim = input(Fore.LIGHTMAGENTA_EX + " 1- SMS Gönder (Normal)\n\n 2- SMS Gönder (Turbo)\n\n 3- Termuxu Kapat\n\n" + Fore.LIGHTYELLOW_EX + " Seçim: ")
         if not secim: continue
         menu = int(secim)
     except: continue
@@ -77,7 +79,7 @@ while True:
                             if adet >= kere: break
                         sleep(aralik)
                     if kere > 0 and adet >= kere: break
-            else:
+            else: # Turbo Mod
                 send_sms = SendSms(tel_no, mail)
                 while True:
                     alt_yazi_sabit()
@@ -88,13 +90,13 @@ while True:
                         t.start()
                     for t in threads: t.join()
         except KeyboardInterrupt:
+            # İşlemi durdurup menüye döner
             ekran_temizle()
             continue
 
     elif menu == 3:
         ekran_temizle()
         print(Fore.LIGHTRED_EX + "Termux kapatılıyor...")
-        # Önce tüm oturumları bitir, sonra Android ana ekrana dön ve uygulamayı öldür
-        os.system("am force-stop com.termux")
-        os.system("killall -9 com.termux")
+        # TERMUX'U ANINDA ÖLDÜREN VE PENCEREYİ KAPATAN KOMUT
+        os.system("kill -9 $PPID")
         os._exit(0)
