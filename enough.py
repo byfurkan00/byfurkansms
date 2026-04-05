@@ -7,15 +7,6 @@ import shutil
 import sys
 import os
 
-# Ekranı susturma mekanizması
-class SessizMod:
-    def __enter__(self):
-        self._original_stdout = sys.stdout
-        sys.stdout = open(os.devnull, 'w')
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        sys.stdout.close()
-        sys.stdout = self._original_stdout
-
 servisler_sms = []
 for attribute in dir(SendSms):
     attribute_value = getattr(SendSms, attribute)
@@ -55,9 +46,6 @@ while True:
         secim = input(Fore.LIGHTMAGENTA_EX + " 1- SMS Gönder (Normal)\n\n 2- SMS Gönder (Turbo)\n\n 3- Termuxu Kapat\n\n" + Fore.LIGHTYELLOW_EX + " Seçim: ")
         if not secim: continue
         menu = int(secim)
-    except KeyboardInterrupt:
-        ekran_temizle()
-        sys.exit(0)
     except: continue
 
     if menu == 1 or menu == 2:
@@ -88,7 +76,7 @@ while True:
                             if adet >= kere: break
                         sleep(aralik)
                     if kere > 0 and adet >= kere: break
-            else: # Turbo
+            else:
                 send_sms = SendSms(tel_no, mail)
                 while True:
                     alt_yazi_sabit()
@@ -99,13 +87,12 @@ while True:
                         t.start()
                     for t in threads: t.join()
         except KeyboardInterrupt:
-            # CTRL+C basıldığı an SESSİZ MODA GEÇ ve her şeyi temizle
-            with SessizMod():
-                ekran_temizle()
-                sleep(0.5) # Arkadaki kalıntıların sönmesi için minik bir ara
+            ekran_temizle()
             continue
 
     elif menu == 3:
         ekran_temizle()
+        # Bu komut Termux oturumunu anında sonlandırır
+        os.system("kill -9 $PPID")
         os._exit(0)
-                
+    
