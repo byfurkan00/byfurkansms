@@ -27,7 +27,7 @@ def sabit_footer_yaz():
     sys.stdout.write(f"\033[{lines};0H")
     # Yazıyı ortala ve sığacak şekilde küçük bas (Kırmızı ve Kalın)
     # Metin sığsın diye biraz daha sadeleştirdim.
-    uyari_metni = " DURDUR: CTRL+C | MENU: TEKRAR CTRL+C "
+    uyari_metni = " DURDUR: CTRL+C | MENÜYE DÖN: CTRL+C "
     if cols < len(uyari_metni):
          # Çok dar ekranlar için ultra kısa metin
          uyari_metni = " CTRL+C: DURDUR "
@@ -165,7 +165,7 @@ while True:
         
         system("cls||clear")
         durdurma_uyarisi_basit()
-        print(Fore.LIGHTYELLOW_EX + "Mail adresi: " + Fore.LIGHTGREEN_EX, end="")
+        print(Fore.LIGHTYELLOW_EX + "enter'a basınız: " + Fore.LIGHTGREEN_EX, end="")
         mail = input().strip()
 
         system("cls||clear")
