@@ -7,10 +7,9 @@ import shutil
 import sys
 import os
 
-# Global durdurma değişkeni
-durma_bayragi = False
+# Durdurma bayrağı
+dur_bakalim = False
 
-# Servisleri hazırla
 servisler_sms = []
 for attribute in dir(SendSms):
     attribute_value = getattr(SendSms, attribute)
@@ -28,24 +27,15 @@ def ekran_temizle():
     sys.stdout.write("\033[r\033[H\033[J")
     sys.stdout.flush()
 
-def guvenli_yazdir(mesaj):
-    # Eğer durdurma tuşuna basıldıysa ekrana hiçbir şey yazma
-    if not durma_bayragi:
-        sys.stdout.write(mesaj + "\n")
-        sys.stdout.flush()
-
-def sms_calistir(fonk_adi, tel, mail):
-    if not durma_bayragi:
-        sms = SendSms(tel, mail)
+def sms_gonder(fonk, tel, mail):
+    if not dur_bakalim:
         try:
-            # SendSms içindeki printleri yakalayamayacağımız için 
-            # sadece kendi akışımızı kontrol ediyoruz.
-            getattr(sms, fonk_adi)()
-        except:
-            pass
+            sms = SendSms(tel, mail)
+            getattr(sms, fonk)()
+        except: pass
 
 while True:
-    durma_bayragi = False
+    dur_bakalim = False
     ekran_temizle()
     print(r"""
     .    .
@@ -90,36 +80,36 @@ while True:
         try:
             if menu == 1:
                 adet = 0
-                while not durma_bayragi:
+                while not dur_bakalim:
                     for fonk in servisler_sms:
-                        if durma_bayragi: break
+                        if dur_bakalim: break
                         alt_yazi_sabit()
-                        sms_calistir(fonk, tel_no, mail)
+                        sms_gonder(fonk, tel_no, mail)
                         if kere > 0:
                             adet += 1
                             if adet >= kere: 
-                                durma_bayragi = True
+                                dur_bakalim = True
                                 break
                         sleep(aralik)
                     if kere > 0 and adet >= kere: break
-            else: # Turbo
-                while not durma_bayragi:
+            else: # Turbo Mod
+                while not dur_bakalim:
                     alt_yazi_sabit()
-                    threads = []
+                    isler = []
                     for fonk in servisler_sms:
-                        if durma_bayragi: break
-                        t = threading.Thread(target=sms_calistir, args=(fonk, tel_no, mail))
-                        t.daemon = True
-                        threads.append(t)
+                        if dur_bakalim: break
+                        t = threading.Thread(target=sms_gonder, args=(fonk, tel_no, mail), daemon=True)
+                        isler.append(t)
                         t.start()
-                    for t in threads:
-                        t.join(0.1)
+                    for t in isler:
+                        t.join(0.1) # Daha hızlı kontrol için kısa süreli join
         except KeyboardInterrupt:
-            durma_bayragi = True # Yazdırmayı anında yasakla
+            dur_bakalim = True
             ekran_temizle()
             continue
 
     elif menu == 3:
         ekran_temizle()
+        print(Fore.LIGHTRED_EX + "Kapatılıyor...")
         os._exit(0)
-            
+               
