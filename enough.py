@@ -8,13 +8,14 @@ import sys
 import os
 import signal
 
-# Servis hazırlığı
+# Servisleri hazırla
 servisler_sms = []
 for attribute in dir(SendSms):
     attribute_value = getattr(SendSms, attribute)
     if callable(attribute_value) and not attribute.startswith('__'):
         servisler_sms.append(attribute)
 
+# --- Ekran Ayarları ---
 def alt_yazi_sabit():
     cols, lines = shutil.get_terminal_size()
     sys.stdout.write(f"\033[0;{lines-1}r")
@@ -26,10 +27,9 @@ def ekran_temizle():
     sys.stdout.write("\033[r\033[H\033[J")
     sys.stdout.flush()
 
-# CTRL + C Yakalayıcı - Programı durdurup menüye döndürür
+# --- CTRL + C Bastığın An Her Şeyi Keser ---
 def sinyal_isleyici(sig, frame):
     ekran_temizle()
-    # Programın akışını ana döngüye zorla fırlatır
     raise KeyboardInterrupt
 
 signal.signal(signal.SIGINT, sinyal_isleyici)
@@ -57,9 +57,9 @@ while True:
         if not menu: continue
         menu = int(menu)
     except KeyboardInterrupt:
-        # Menüde CTRL+C yapılırsa terminale çıkış menüsünü tetikler
-        os.system("kill -SIGINT $PPID")
-        sys.exit()
+        # Menüde CTRL+C yapılırsa terminale çıkış menüsü tetiklenir
+        print("\nÇıkış yapılıyor...")
+        sys.exit(0)
     except: continue
 
     if menu == 1 or menu == 2:
@@ -90,18 +90,21 @@ while True:
                             if adet >= kere: break
                         sleep(aralik)
                     if kere > 0 and adet >= kere: break
-            else:
+            else: # TURBO MOD
                 send_sms = SendSms(tel_no, mail)
-                while True: # Turbo sonsuz döngü
+                while True: 
                     alt_yazi_sabit()
                     threads = []
                     for fonk in servisler_sms:
                         t = threading.Thread(target=getattr(send_sms, fonk), daemon=True)
                         threads.append(t)
                         t.start()
-                    for t in threads: t.join()
+                    # Thread'lerin bitmesini bekle ama CTRL+C'ye duyarlı kal
+                    for t in threads:
+                        while t.is_alive():
+                            t.join(timeout=0.1)
         except KeyboardInterrupt:
-            # CTRL+C basıldığı an buraya düşer, ekranı temizler ve döngü başına döner
+            # Durdurulduğu an buraya düşer ve ekranı temizleyip menüye döner
             ekran_temizle()
             continue 
 
