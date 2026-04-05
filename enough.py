@@ -5,29 +5,35 @@ from sms import SendSms
 import threading
 import shutil
 import sys
+import os
+import signal
 
 # Servisleri hazırla
 servisler_sms = []
 for attribute in dir(SendSms):
     attribute_value = getattr(SendSms, attribute)
-    if callable(attribute_value):
-        if not attribute.startswith('__'):
-            servisler_sms.append(attribute)
+    if callable(attribute_value) and not attribute.startswith('__'):
+        servisler_sms.append(attribute)
 
+# --- Sabit Footer ve Ekran Ayarları ---
 def alt_yazi_sabit():
     cols, lines = shutil.get_terminal_size()
-    # Kaydırma alanını sınırla (Üst akar, alt sabit)
     sys.stdout.write(f"\033[0;{lines-1}r")
-    # En alt satıra kırmızı uyarıyı çak
     sys.stdout.write(f"\033[{lines};0H\033[1;31m DURDUR VE MENUYE DON: CTRL + C \033[0m")
-    # İmleci en üste taşı
     sys.stdout.write("\033[H")
     sys.stdout.flush()
 
 def ekran_temizle():
-    # Kaydırma alanını sıfırla ve ekranı kazı
     sys.stdout.write("\033[r\033[H\033[J")
     sys.stdout.flush()
+
+# --- CTRL + C Basınca Anında Menüye Atma Fonksiyonu ---
+def sinyal_yakalayici(sig, frame):
+    ekran_temizle()
+    # Bu kısım programın akışını keser ve döngüden çıkarır
+    raise KeyboardInterrupt
+
+signal.signal(signal.SIGINT, sinyal_yakalayici)
 
 while True:
     ekran_temizle()
@@ -54,7 +60,7 @@ while True:
     except: continue
 
     if menu == 1 or menu == 2:
-        system("clear")
+        ekran_temizle()
         tel_no = input(Fore.LIGHTYELLOW_EX + "Telefon no (90 sız): " + Fore.LIGHTGREEN_EX).strip()
         mail = input(Fore.LIGHTYELLOW_EX + "Mail (boş geç): " + Fore.LIGHTGREEN_EX).strip()
         
@@ -65,7 +71,6 @@ while True:
                 aralik = int(input(Fore.LIGHTYELLOW_EX + "Saniye: " + Fore.LIGHTGREEN_EX) or 0)
             except: pass
 
-        # GÖNDERİM BAŞLIYOR - EKRANI SIFIRLA
         ekran_temizle()
         alt_yazi_sabit()
 
@@ -82,7 +87,7 @@ while True:
                             if adet >= kere: break
                         sleep(aralik)
                     if kere > 0 and adet >= kere: break
-            else: # TURBO
+            else:
                 send_sms = SendSms(tel_no, mail)
                 dur = threading.Event()
                 def Turbo():
@@ -96,13 +101,13 @@ while True:
                         for t in threads: t.join()
                 Turbo()
         except KeyboardInterrupt:
-            # Ctrl+C burada yakalanır, döngü anında ölür
+            # CTRL+C burada yakalanır, hiçbir şey yapmadan temizliğe gider
             pass 
         
-        ekran_temizle() # Menüye dönmeden önce her şeyi temizle
+        ekran_temizle()
 
     elif menu == 3:
-        system("clear")
+        ekran_temizle()
         print(Fore.LIGHTRED_EX + "Kapatılıyor...")
-        sys.exit(0)
-    
+        os._exit(0)
+                
